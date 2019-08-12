@@ -22,7 +22,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
 
     def robot_specific_reset(self):
         cpose = cpp_household.Pose()
-        cpose.set_xyz(0, 0, 0.3)
+        cpose.set_xyz(0, 0, 0.25)
         cpose.set_rpy(0, 0, 0)
         self.cpp_robot.set_pose_and_speed(cpose, 0, 0, 0)
 

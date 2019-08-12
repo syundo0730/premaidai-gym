@@ -4,7 +4,12 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="premaidai" xmlns:xacro="http://ros.org/wiki/xacro">
-  <link name="base_link"/>
+  <link name="base_link">
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="0." ixy="0." ixz="0." iyy="0." iyz="0." izz="0."/>
+    </inertial>
+  </link>
   <link name="r_hip_joint">
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -77,13 +82,19 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
     </inertial>
   </link>
-  <link name="r_dummy">
+  <link name="r_ankle">
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <box size="0.01 0.01 0.01"/>
+        <mesh filename="package://premaidai_description/meshes/r_ankle.dae"/>
       </geometry>
     </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://premaidai_description/meshes/r_ankle.dae"/>
+      </geometry>
+    </collision>
     <inertial>
       <mass value="0.01"/>
       <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
@@ -108,44 +119,45 @@
     </inertial>
   </link>
   <joint name="r_hpz_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 -0.0217 0.01505"/>
+    <origin rpy="0 0 0" xyz="0.004225 -0.0195245 0.001412"/>
     <axis xyz="0 0 1"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-1.41371669412" upper="1.78774075282" velocity="0"/>
     <parent link="base_link"/>
     <child link="r_hip_joint"/>
   </joint>
   <joint name="r_hpx_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 -0.05407"/>
+    <origin rpy="0 0 0" xyz="0 0.0021 -0.028"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-0.442440965381" upper="0.396416633005" velocity="0"/>
     <parent link="r_hip_joint"/>
     <child link="r_uleg_root"/>
   </joint>
   <joint name="r_hpy_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 -0.01021 -0.03829"/>
+    <origin rpy="0 0 0" xyz="0 -0.0128525 -0.034358"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-1.59872159483" upper="1.5745138781" velocity="0"/>
     <parent link="r_uleg_root"/>
     <child link="r_uleg"/>
   </joint>
   <joint name="r_kny_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 -0.06827"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.0652"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-0.036521014598" upper="2.08811191709" velocity="0"/>
     <parent link="r_uleg"/>
     <child link="r_lleg"/>
   </joint>
   <joint name="r_aky_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 -0.06749"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.065"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-1.07089039579" upper="0.424115008235" velocity="0"/>
     <parent link="r_lleg"/>
-    <child link="r_dummy"/>
+    <child link="r_ankle"/>
   </joint>
   <joint name="r_akx_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.040677"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
-    <parent link="r_dummy"/>
+    <limit effort="0" lower="-0.667392089347" upper="0.650898727916" velocity="0"/>
+    <parent link="r_ankle"/>
     <child link="r_foot"/>
   </joint>
   <link name="l_hip_joint">
@@ -220,13 +232,19 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
     </inertial>
   </link>
-  <link name="l_dummy">
+  <link name="l_ankle">
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <box size="0.01 0.01 0.01"/>
+        <mesh filename="package://premaidai_description/meshes/l_ankle.dae"/>
       </geometry>
     </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://premaidai_description/meshes/l_ankle.dae"/>
+      </geometry>
+    </collision>
     <inertial>
       <mass value="0.01"/>
       <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
@@ -251,44 +269,45 @@
     </inertial>
   </link>
   <joint name="l_hpz_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0.0217 0.01505"/>
+    <origin rpy="0 0 0" xyz="0.004225 0.0195245 0.001412"/>
     <axis xyz="0 0 1"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-1.41371669412" upper="1.78774075282" velocity="0"/>
     <parent link="base_link"/>
     <child link="l_hip_joint"/>
   </joint>
   <joint name="l_hpx_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 -0.05407"/>
+    <origin rpy="0 0 0" xyz="0 -0.0021 -0.028"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-0.396416633005" upper="0.442440965381" velocity="0"/>
     <parent link="l_hip_joint"/>
     <child link="l_uleg_root"/>
   </joint>
   <joint name="l_hpy_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0.01021 -0.03829"/>
+    <origin rpy="0 0 0" xyz="0 0.0128525 -0.034358"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-1.59872159483" upper="1.5745138781" velocity="0"/>
     <parent link="l_uleg_root"/>
     <child link="l_uleg"/>
   </joint>
   <joint name="l_kny_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 -0.06827"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.0652"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-0.036521014598" upper="2.08811191709" velocity="0"/>
     <parent link="l_uleg"/>
     <child link="l_lleg"/>
   </joint>
   <joint name="l_aky_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 -0.06749"/>
+    <origin rpy="0 0 0" xyz="0 0 -0.065"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-1.07089039579" upper="0.424115008235" velocity="0"/>
     <parent link="l_lleg"/>
-    <child link="l_dummy"/>
+    <child link="l_ankle"/>
   </joint>
   <joint name="l_akx_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.040677"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
-    <parent link="l_dummy"/>
+    <limit effort="0" lower="-0.650898727916" upper="0.667392089347" velocity="0"/>
+    <parent link="l_ankle"/>
     <child link="l_foot"/>
   </joint>
   <link name="r_uarm_joint">
@@ -382,37 +401,37 @@
     </inertial>
   </link>
   <joint name="r_shy_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="-0.01726 -0.03829 0.097"/>
+    <origin rpy="0 0 0" xyz="0 -0.0359 0.113043"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-1.88495559215" upper="2.23838476568" velocity="0"/>
     <parent link="base_link"/>
     <child link="r_uarm_joint"/>
   </joint>
   <joint name="r_shx_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 -0.01925 0"/>
+    <origin rpy="0 0 0" xyz="0 -0.0189 0"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-0.0530143760293" upper="1.59808891297" velocity="0"/>
     <parent link="r_uarm_joint"/>
     <child link="r_uarm"/>
   </joint>
   <joint name="r_ely_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 -0.05587567 0"/>
+    <origin rpy="0 0 0" xyz="0.0088013 -0.060007 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-2.24604239778" upper="2.34441351774" velocity="0"/>
     <parent link="r_uarm"/>
     <child link="r_larm_joint"/>
   </joint>
   <joint name="r_elx_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 -0.0304889766965 0"/>
+    <origin rpy="0 0 0" xyz="0 -0.024054 0"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-0.235619449019" upper="2.07639639448" velocity="0"/>
     <parent link="r_larm_joint"/>
     <child link="r_larm"/>
   </joint>
   <joint name="r_wry_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0.01002 -0.0476117842556 0"/>
+    <origin rpy="0 0 0" xyz="0 -0.061348 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-2.35619449019" upper="2.06167017892" velocity="0"/>
     <parent link="r_larm"/>
     <child link="r_hand"/>
   </joint>
@@ -507,37 +526,37 @@
     </inertial>
   </link>
   <joint name="l_shy_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="-0.01726 0.03829 0.097"/>
+    <origin rpy="0 0 0" xyz="0 0.0359 0.113043"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-1.88495559215" upper="2.23838476568" velocity="0"/>
     <parent link="base_link"/>
     <child link="l_uarm_joint"/>
   </joint>
   <joint name="l_shx_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0.01925 0"/>
+    <origin rpy="0 0 0" xyz="0 0.0189 0"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-1.59808891297" upper="0.0530143760293" velocity="0"/>
     <parent link="l_uarm_joint"/>
     <child link="l_uarm"/>
   </joint>
   <joint name="l_ely_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0.05587567 0"/>
+    <origin rpy="0 0 0" xyz="0.0088013 0.060007 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-2.24604239778" upper="2.34441351774" velocity="0"/>
     <parent link="l_uarm"/>
     <child link="l_larm_joint"/>
   </joint>
   <joint name="l_elx_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0.0304889766965 0"/>
+    <origin rpy="0 0 0" xyz="0 0.024054 0"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-2.07639639448" upper="0.235619449019" velocity="0"/>
     <parent link="l_larm_joint"/>
     <child link="l_larm"/>
   </joint>
   <joint name="l_wry_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0.01002 0.0476117842556 0"/>
+    <origin rpy="0 0 0" xyz="0 0.061348 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.5707963268" upper="1.5707963268" velocity="0"/>
+    <limit effort="0" lower="-2.35619449019" upper="2.06167017892" velocity="0"/>
     <parent link="l_larm"/>
     <child link="l_hand"/>
   </joint>
@@ -557,15 +576,15 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
     </inertial>
   </link>
-  <link name="neck">
+  <link name="neck_pitch">
     <visual>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/neck.dae"/>
+        <mesh filename="package://premaidai_description/meshes/neck_pitch.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/neck.dae"/>
+        <mesh filename="package://premaidai_description/meshes/neck_pitch.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -573,12 +592,17 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
     </inertial>
   </link>
-  <link name="head_dummy">
+  <link name="head_yaw">
     <visual>
       <geometry>
-        <box size="0.01 0.01 0.01"/>
+        <mesh filename="package://premaidai_description/meshes/neck_yaw.dae"/>
       </geometry>
     </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://premaidai_description/meshes/neck_yaw.dae"/>
+      </geometry>
+    </collision>
     <inertial>
       <mass value="0.01"/>
       <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
@@ -601,38 +625,29 @@
     </inertial>
   </link>
   <joint name="body_to_base_link" type="fixed">
-    <origin rpy="0 0 0" xyz="0.0236 0 0"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link"/>
     <child link="body"/>
   </joint>
   <joint name="head_ny_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="-0.0319 0 0.1088"/>
+    <origin rpy="0 0 0" xyz="0.0038738 0 0.132809"/>
     <axis xyz="0 1 0"/>
     <limit effort="0" lower="-0.176714586764" upper="0.412334035784" velocity="0"/>
     <parent link="body"/>
-    <child link="neck"/>
+    <child link="neck_pitch"/>
   </joint>
   <joint name="head_nz_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <origin rpy="0 0 0" xyz="-0.0103485 0 0.011103"/>
     <axis xyz="0 0 1"/>
     <limit effort="0" lower="-0.824668071567" upper="0.824668071567" velocity="0"/>
-    <parent link="neck"/>
-    <child link="head_dummy"/>
+    <parent link="neck_pitch"/>
+    <child link="head_yaw"/>
   </joint>
   <joint name="head_nx_joint" type="revolute">
-    <origin rpy="0 0 0" xyz="0 0 0.0362"/>
+    <origin rpy="0 0 0" xyz="0 0 0.0129"/>
     <axis xyz="1 0 0"/>
     <limit effort="0" lower="-0.382881604656" upper="0.500691329166" velocity="0"/>
-    <parent link="head_dummy"/>
+    <parent link="head_yaw"/>
     <child link="head"/>
   </joint>
-  <!-- MUST implement
-    <joint name="head_yaw_joint" type="revolute">
-      <origin xyz="0 0 0.0362" rpy="0 0 0"/>
-      <axis xyz="0 1 0"/>
-      <limit lower="0" upper="0" effort="0" velocity="0"/>
-      <parent link="neck"/>
-      <child link="head"/>
-    </joint>
- -->
 </robot>
