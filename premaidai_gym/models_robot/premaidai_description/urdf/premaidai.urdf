@@ -24,8 +24,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0143"/>
+      <origin xyz="0.000000 -0.000183 -0.010532"/>
+      <inertia ixx="20.138887e-10" ixy="-0.000001e-10" ixz="0.0e-10" iyy="53.757824e-10" iyz="5.18773e-11" izz="46.127151e-10"/>
     </inertial>
   </link>
   <link name="r_uleg_root">
@@ -42,8 +43,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0648"/>
+      <origin xyz="-0.000000 -0.01342 -0.004373"/>
+      <inertia ixx="246.003845e-10" ixy="1.517e-13" ixz="-0.001688e-10" iyy="191.922195e-10" iyz="6.165664e-10" izz="238.454895e-10"/>
     </inertial>
   </link>
   <link name="r_uleg">
@@ -60,8 +62,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.1134"/>
+      <origin xyz="-0.000000 0.000001 -0.032601"/>
+      <inertia ixx="884.390869e-10" ixy="0.000002e-10" ixz="-0.000046e-10" iyy="825.489990e-10" iyz="-0.000031e-10" izz="222.801773e-10"/>
     </inertial>
   </link>
   <link name="r_lleg">
@@ -78,8 +81,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0719"/>
+      <origin xyz="-0.001624 -0.002494 -0.034776"/>
+      <inertia ixx="735.568420e-10" ixy="1.871153e-10" ixz="-35.647034e-10" iyy="434.662354e-10" iyz="-2.47592e-11" izz="480.555054e-10"/>
     </inertial>
   </link>
   <link name="r_ankle">
@@ -96,8 +100,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0571"/>
+      <origin xyz="-0.009629 0.000379 -0.003702"/>
+      <inertia ixx="175.244446e-10" ixy="-0.000004e-10" ixz="11.289989e-10" iyy="257.425598e-10" iyz="-0.000002e-10" izz="224.547821e-10"/>
     </inertial>
   </link>
   <link name="r_foot">
@@ -114,8 +119,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0941"/>
+      <origin xyz="0.005014 -0.008793 -0.004123"/>
+      <inertia ixx="383.406982e-10" ixy="-1.1222215e-09" ixz="12.157411e-10" iyy="1013.430359e-10" iyz="1.649494e-10" izz="1206.411377e-10"/>
     </inertial>
   </link>
   <joint name="r_hpz_joint" type="revolute">
@@ -160,6 +166,24 @@
     <parent link="r_ankle"/>
     <child link="r_foot"/>
   </joint>
+  <gazebo reference="r_hip_joint">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="r_uleg_root">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="r_uleg">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="r_lleg">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="r_ankle">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="r_foot">
+    <selfCollide>false</selfCollide>
+  </gazebo>
   <link name="l_hip_joint">
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -174,8 +198,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0143"/>
+      <origin xyz="0.000000 0.000183 -0.010532"/>
+      <inertia ixx="20.138887e-10" ixy="-0.000001e-10" ixz="0.0e-10" iyy="53.757824e-10" iyz="-5.18773e-11" izz="46.127151e-10"/>
     </inertial>
   </link>
   <link name="l_uleg_root">
@@ -192,8 +217,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0648"/>
+      <origin xyz="-0.000000 0.01342 -0.004373"/>
+      <inertia ixx="246.003845e-10" ixy="-1.517e-13" ixz="-0.001688e-10" iyy="191.922195e-10" iyz="-6.165664e-10" izz="238.454895e-10"/>
     </inertial>
   </link>
   <link name="l_uleg">
@@ -210,8 +236,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.1134"/>
+      <origin xyz="-0.000000 0.000001 -0.032601"/>
+      <inertia ixx="884.390869e-10" ixy="0.000002e-10" ixz="-0.000046e-10" iyy="825.489990e-10" iyz="-0.000031e-10" izz="222.801773e-10"/>
     </inertial>
   </link>
   <link name="l_lleg">
@@ -228,8 +255,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0719"/>
+      <origin xyz="-0.001624 0.002494 -0.034776"/>
+      <inertia ixx="735.568420e-10" ixy="-1.871153e-10" ixz="-35.647034e-10" iyy="434.662354e-10" iyz="2.47592e-11" izz="480.555054e-10"/>
     </inertial>
   </link>
   <link name="l_ankle">
@@ -246,8 +274,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0571"/>
+      <origin xyz="-0.009629 0.000379 -0.003702"/>
+      <inertia ixx="175.244446e-10" ixy="-0.000004e-10" ixz="11.289989e-10" iyy="257.425598e-10" iyz="-0.000002e-10" izz="224.547821e-10"/>
     </inertial>
   </link>
   <link name="l_foot">
@@ -264,8 +293,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0941"/>
+      <origin xyz="0.005014 0.008793 -0.004123"/>
+      <inertia ixx="383.406982e-10" ixy="1.1222215e-09" ixz="12.157411e-10" iyy="1013.430359e-10" iyz="-1.649494e-10" izz="1206.411377e-10"/>
     </inertial>
   </link>
   <joint name="l_hpz_joint" type="revolute">
@@ -310,6 +340,24 @@
     <parent link="l_ankle"/>
     <child link="l_foot"/>
   </joint>
+  <gazebo reference="l_hip_joint">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="l_uleg_root">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="l_uleg">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="l_lleg">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="l_ankle">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="l_foot">
+    <selfCollide>false</selfCollide>
+  </gazebo>
   <link name="r_uarm_joint">
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -324,8 +372,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0131"/>
+      <origin xyz="-0.000000 -0.005109 0.000865"/>
+      <inertia ixx="39.090332e-10" ixy="0.000021e-10" ixz="0.000003e-10" iyy="116.438423e-10" iyz="4.044059e-10" izz="132.243393e-10"/>
     </inertial>
   </link>
   <link name="r_uarm">
@@ -342,8 +391,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0712"/>
+      <origin xyz="-0.000001 -0.02164 0.000670"/>
+      <inertia ixx="356.620514e-10" ixy="-0.000020e-10" ixz="0.000026e-10" iyy="126.890160e-10" iyz="-4.816492e-10" izz="414.000244e-10"/>
     </inertial>
   </link>
   <link name="r_larm_joint">
@@ -360,8 +410,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0124"/>
+      <origin xyz="-0.008596 -0.015762 0.002150"/>
+      <inertia ixx="70.485497e-10" ixy="-1.04342163e-08" ixz="-0.000005e-10" iyy="188.648819e-10" iyz="3.8465e-10" izz="236.494141e-10"/>
     </inertial>
   </link>
   <link name="r_larm">
@@ -378,8 +429,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0812"/>
+      <origin xyz="-0.008596 -0.027572 0.000420"/>
+      <inertia ixx="342.361237e-10" ixy="3.6e-15" ixz="0.000012e-10" iyy="141.587677e-10" iyz="-3.82193e-11" izz="414.116486e-10"/>
     </inertial>
   </link>
   <link name="r_hand">
@@ -396,8 +448,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0046"/>
+      <origin xyz="0.001817 -0.018911 0.002717"/>
+      <inertia ixx="8.193970e-10" ixy="1.78483e-11" ixz="0.194812e-10" iyy="3.111708e-10" iyz="2.003531e-10" izz="9.081884e-10"/>
     </inertial>
   </link>
   <joint name="r_shy_joint" type="revolute">
@@ -435,6 +488,21 @@
     <parent link="r_larm"/>
     <child link="r_hand"/>
   </joint>
+  <gazebo reference="r_uarm_joint">
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="r_uarm">
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="r_larm_joint">
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="r_larm">
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="r_hand">
+    <selfCollide>true</selfCollide>
+  </gazebo>
   <link name="l_uarm_joint">
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -449,8 +517,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0131"/>
+      <origin xyz="-0.000000 0.005109 0.000865"/>
+      <inertia ixx="39.090332e-10" ixy="0.000021e-10" ixz="0.000003e-10" iyy="116.438423e-10" iyz="-4.044059e-10" izz="132.243393e-10"/>
     </inertial>
   </link>
   <link name="l_uarm">
@@ -467,8 +536,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0712"/>
+      <origin xyz="-0.000001 0.02164 0.000670"/>
+      <inertia ixx="356.620514e-10" ixy="-0.000020e-10" ixz="0.000026e-10" iyy="126.890160e-10" iyz="4.816492e-10" izz="414.000244e-10"/>
     </inertial>
   </link>
   <link name="l_larm_joint">
@@ -485,8 +555,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0124"/>
+      <origin xyz="-0.008596 0.015762 0.002150"/>
+      <inertia ixx="70.485497e-10" ixy="1.04342163e-08" ixz="-0.000005e-10" iyy="188.648819e-10" iyz="-3.8465e-10" izz="236.494141e-10"/>
     </inertial>
   </link>
   <link name="l_larm">
@@ -503,8 +574,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0812"/>
+      <origin xyz="-0.008596 0.027572 0.000420"/>
+      <inertia ixx="342.361237e-10" ixy="-3.6e-15" ixz="0.000012e-10" iyy="141.587677e-10" iyz="3.82193e-11" izz="414.116486e-10"/>
     </inertial>
   </link>
   <link name="l_hand">
@@ -521,8 +593,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.0046"/>
+      <origin xyz="0.001817 0.018911 0.002717"/>
+      <inertia ixx="8.193970e-10" ixy="-1.78483e-11" ixz="0.194812e-10" iyy="3.111708e-10" iyz="-2.003531e-10" izz="9.081884e-10"/>
     </inertial>
   </link>
   <joint name="l_shy_joint" type="revolute">
@@ -560,6 +633,21 @@
     <parent link="l_larm"/>
     <child link="l_hand"/>
   </joint>
+  <gazebo reference="l_uarm_joint">
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="l_uarm">
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="l_larm_joint">
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="l_larm">
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="l_hand">
+    <selfCollide>true</selfCollide>
+  </gazebo>
   <link name="body">
     <visual>
       <geometry>
@@ -572,8 +660,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.4426"/>
+      <origin xyz="0.008509 0.000002 0.070698"/>
+      <inertia ixx="2871.143311e-10" ixy="-0.001151e-10" ixz="237.094467e-10" iyy="2672.078857e-10" iyz="-0.003379e-10" izz="1188.332153e-10"/>
     </inertial>
   </link>
   <link name="neck_pitch">
@@ -589,7 +678,8 @@
     </collision>
     <inertial>
       <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <origin xyz="-0.006449 0.000002 0.008964"/>
+      <inertia ixx="6.489763e-10" ixy="-0.000003e-10" ixz="-0.024047e-10" iyy="2.296302e-10" iyz="-0.000005e-10" izz="6.197822e-10"/>
     </inertial>
   </link>
   <link name="head_yaw">
@@ -605,7 +695,8 @@
     </collision>
     <inertial>
       <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <origin xyz="0.008100 0.000002 0.017871"/>
+      <inertia ixx="12.636111e-10" ixy="-0.000001e-10" ixz="0.0" iyy="23.689224e-10" iyz="0.0" izz="17.372910e-10"/>
     </inertial>
   </link>
   <link name="head">
@@ -620,8 +711,9 @@
       </geometry>
     </collision>
     <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="1.0" ixy="0.0" ixz="0.2" iyy="1.0" iyz="0.0" izz="0.0"/>
+      <mass value="0.1449"/>
+      <origin xyz="0.014213 0.000001 0.011813"/>
+      <inertia ixx="650.041687e-10" ixy="-0.000280e-10" ixz="49.702934e-10" iyy="598.413635e-10" iyz="-0.000379e-10" izz="588.398682e-10"/>
     </inertial>
   </link>
   <joint name="body_to_base_link" type="fixed">
@@ -650,4 +742,16 @@
     <parent link="head_yaw"/>
     <child link="head"/>
   </joint>
+  <gazebo reference="body">
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="neck_pitch">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="neck_yaw">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="head">
+    <selfCollide>true</selfCollide>
+  </gazebo>
 </robot>
