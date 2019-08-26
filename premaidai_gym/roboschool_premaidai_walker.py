@@ -14,7 +14,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
 
     def __init__(self):
         model_path = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), 'models_robot/premaidai_description/urdf/premaidai.urdf')
+            os.path.dirname(os.path.abspath(__file__)), 'assets/premaidai.urdf')
         RoboschoolUrdfEnv.__init__(self, model_urdf=model_path, robot_name='base_link',
                                    action_dim=self.JOINT_DIM, obs_dim=self.OBS_DIM,
                                    fixed_base=False, self_collision=False)

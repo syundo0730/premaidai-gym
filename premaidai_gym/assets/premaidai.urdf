@@ -14,13 +14,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_hip_joint.dae"/>
+        <mesh filename="package://assets/meshes/r_hip_joint.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_hip_joint.dae"/>
+        <mesh filename="package://assets/meshes/r_hip_joint.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -33,13 +33,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_uleg_root.dae"/>
+        <mesh filename="package://assets/meshes/r_uleg_root.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_uleg_root.dae"/>
+        <mesh filename="package://assets/meshes/r_uleg_root.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -52,13 +52,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_uleg.dae"/>
+        <mesh filename="package://assets/meshes/r_uleg.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_uleg.dae"/>
+        <mesh filename="package://assets/meshes/r_uleg.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -71,13 +71,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_lleg.dae"/>
+        <mesh filename="package://assets/meshes/r_lleg.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_lleg.dae"/>
+        <mesh filename="package://assets/meshes/r_lleg.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -90,13 +90,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_ankle.dae"/>
+        <mesh filename="package://assets/meshes/r_ankle.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_ankle.dae"/>
+        <mesh filename="package://assets/meshes/r_ankle.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -109,13 +109,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_foot.dae"/>
+        <mesh filename="package://assets/meshes/r_foot.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_foot.dae"/>
+        <mesh filename="package://assets/meshes/r_foot.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -188,13 +188,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_hip_joint.dae"/>
+        <mesh filename="package://assets/meshes/l_hip_joint.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_hip_joint.dae"/>
+        <mesh filename="package://assets/meshes/l_hip_joint.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -207,13 +207,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_uleg_root.dae"/>
+        <mesh filename="package://assets/meshes/l_uleg_root.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_uleg_root.dae"/>
+        <mesh filename="package://assets/meshes/l_uleg_root.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -226,13 +226,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_uleg.dae"/>
+        <mesh filename="package://assets/meshes/l_uleg.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_uleg.dae"/>
+        <mesh filename="package://assets/meshes/l_uleg.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -245,13 +245,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_lleg.dae"/>
+        <mesh filename="package://assets/meshes/l_lleg.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_lleg.dae"/>
+        <mesh filename="package://assets/meshes/l_lleg.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -264,13 +264,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_ankle.dae"/>
+        <mesh filename="package://assets/meshes/l_ankle.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_ankle.dae"/>
+        <mesh filename="package://assets/meshes/l_ankle.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -283,13 +283,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_foot.dae"/>
+        <mesh filename="package://assets/meshes/l_foot.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_foot.dae"/>
+        <mesh filename="package://assets/meshes/l_foot.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -362,13 +362,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_uarm_joint.dae"/>
+        <mesh filename="package://assets/meshes/r_uarm_joint.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_uarm_joint.dae"/>
+        <mesh filename="package://assets/meshes/r_uarm_joint.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -381,13 +381,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_uarm.dae"/>
+        <mesh filename="package://assets/meshes/r_uarm.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_uarm.dae"/>
+        <mesh filename="package://assets/meshes/r_uarm.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -400,13 +400,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_larm_joint.dae"/>
+        <mesh filename="package://assets/meshes/r_larm_joint.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_larm_joint.dae"/>
+        <mesh filename="package://assets/meshes/r_larm_joint.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -419,13 +419,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_larm.dae"/>
+        <mesh filename="package://assets/meshes/r_larm.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_larm.dae"/>
+        <mesh filename="package://assets/meshes/r_larm.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -438,13 +438,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_hand.dae"/>
+        <mesh filename="package://assets/meshes/r_hand.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/r_hand.dae"/>
+        <mesh filename="package://assets/meshes/r_hand.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -507,13 +507,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_uarm_joint.dae"/>
+        <mesh filename="package://assets/meshes/l_uarm_joint.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_uarm_joint.dae"/>
+        <mesh filename="package://assets/meshes/l_uarm_joint.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -526,13 +526,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_uarm.dae"/>
+        <mesh filename="package://assets/meshes/l_uarm.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_uarm.dae"/>
+        <mesh filename="package://assets/meshes/l_uarm.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -545,13 +545,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_larm_joint.dae"/>
+        <mesh filename="package://assets/meshes/l_larm_joint.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_larm_joint.dae"/>
+        <mesh filename="package://assets/meshes/l_larm_joint.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -564,13 +564,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_larm.dae"/>
+        <mesh filename="package://assets/meshes/l_larm.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_larm.dae"/>
+        <mesh filename="package://assets/meshes/l_larm.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -583,13 +583,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_hand.dae"/>
+        <mesh filename="package://assets/meshes/l_hand.dae"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/l_hand.dae"/>
+        <mesh filename="package://assets/meshes/l_hand.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -651,12 +651,12 @@
   <link name="body">
     <visual>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/body.dae"/>
+        <mesh filename="package://assets/meshes/body.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/body.dae"/>
+        <mesh filename="package://assets/meshes/body.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -668,12 +668,12 @@
   <link name="neck_pitch">
     <visual>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/neck_pitch.dae"/>
+        <mesh filename="package://assets/meshes/neck_pitch.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/neck_pitch.dae"/>
+        <mesh filename="package://assets/meshes/neck_pitch.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -685,12 +685,12 @@
   <link name="head_yaw">
     <visual>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/neck_yaw.dae"/>
+        <mesh filename="package://assets/meshes/neck_yaw.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/neck_yaw.dae"/>
+        <mesh filename="package://assets/meshes/neck_yaw.dae"/>
       </geometry>
     </collision>
     <inertial>
@@ -702,12 +702,12 @@
   <link name="head">
     <visual>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/head.dae"/>
+        <mesh filename="package://assets/meshes/head.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://premaidai_description/meshes/head.dae"/>
+        <mesh filename="package://assets/meshes/head.dae"/>
       </geometry>
     </collision>
     <inertial>
