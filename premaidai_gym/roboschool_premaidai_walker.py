@@ -68,7 +68,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
 
     def _apply_action(self, action):
         for n, j in enumerate(self.ordered_joints):
-            j.set_servo_target(action[n], 0.1, 0.1, 40)
+            j.set_servo_target(float(action[n]), 0.1, 0.1, 40)
 
     def _is_done(self, state):
         raise NotImplementedError
