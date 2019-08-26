@@ -85,7 +85,8 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
 
     def _is_done(self, state):
         _, _, z = self.robot_body.pose().xyz()
-        return z < 0.1
+        # prevent fallen down and jumping
+        return z < 0.1 or z > 0.4
 
     def _calc_reward(self, state):
         x, y, _ = self.robot_body.pose().xyz()
