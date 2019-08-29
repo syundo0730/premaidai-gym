@@ -94,8 +94,9 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
 
 
 class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
-    ELECTRICITY_COST_WEIGHT = -2.0
-    STALL_TORQUE_COST_WEIGHT = -0.1
+    PROGRESS_COST_WEIGHT = 15.
+    ELECTRICITY_COST_WEIGHT = -0.1
+    STALL_TORQUE_COST_WEIGHT = -0.002
 
     def __init__(self):
         super().__init__()
@@ -112,21 +113,19 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
         dt = self.scene.dt
         potential = - self._walk_target_distance / dt
         progress = potential - self._last_potential if self._last_potential else 0
+        progress *= self.PROGRESS_COST_WEIGHT
         self._last_potential = potential
 
         # calculate joint cost
         joint_speed = state[1::2][:self.JOINT_DIM]
         joint_acc = ((joint_speed - self._last_joint_speed) / dt
-                     if self._last_joint_speed else np.zeros_like(joint_speed))
-        electricity_cost = (self.ELECTRICITY_COST_WEIGHT * float(np.abs(joint_acc * joint_speed).mean()) +
-                            self.STALL_TORQUE_COST_WEIGHT * float(np.square(joint_acc).mean()))
-
-        # calculate standing cost
-        height_cost = -abs(self.robot_body.pose().xyz()[2] - self._target_xyz[2])
+                     if self._last_joint_speed is not None else np.zeros_like(joint_speed))
+        self._last_joint_speed = joint_speed
+        electricity_cost = (self.ELECTRICITY_COST_WEIGHT * np.abs(joint_acc * joint_speed).mean() +
+                            self.STALL_TORQUE_COST_WEIGHT * np.linalg.norm(joint_acc))
 
         self.rewards = [
             progress,
             electricity_cost,
-            height_cost,
         ]
         return sum(self.rewards)
