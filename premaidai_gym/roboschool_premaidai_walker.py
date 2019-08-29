@@ -98,9 +98,9 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
 
 
 class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
-    PROGRESS_COST_WEIGHT = 15.
-    ELECTRICITY_COST_WEIGHT = -0.1
-    STALL_TORQUE_COST_WEIGHT = -0.002
+    PROGRESS_COST_WEIGHT = 50.
+    ELECTRICITY_COST_WEIGHT = -0.01
+    STALL_TORQUE_COST_WEIGHT = -0.0002
 
     def __init__(self):
         super().__init__()
