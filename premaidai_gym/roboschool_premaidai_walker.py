@@ -38,8 +38,12 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         cpose.set_rpy(0, 0, 0)
         self.cpp_robot.set_pose_and_speed(cpose, 0, 0, 0)
 
-        for j in self.ordered_joints:
+        for i, j in enumerate(self.ordered_joints):
             j.reset_current_position(0, 0)
+            limits = j.limits()
+            self.action_space.low[i] = limits[0]
+            self.action_space.high[i] = limits[1]
+
         self.scene.actor_introduce(self)
 
     def calc_state(self):
