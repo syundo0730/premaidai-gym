@@ -80,7 +80,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         self.HUD(state, action, done)
         # ====================
 
-        return state, reward, done, {'dt': self.scene.dt}
+        return state, reward, done, {}
 
     def _apply_action(self, action):
         for n, j in enumerate(self.ordered_joints):
@@ -94,7 +94,8 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
 
 
 class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
-    JOINT_SPEED_COST_WEIGHT = -0.02
+    ELECTRICITY_COST_WEIGHT = -2.0
+    STALL_TORQUE_COST_WEIGHT = -0.1
 
     def __init__(self):
         super().__init__()
@@ -115,10 +116,17 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
 
         # calculate joint cost
         joint_speed = state[1::2][:self.JOINT_DIM]
-        electricity_cost = self.JOINT_SPEED_COST_WEIGHT * float(np.linalg.norm(joint_speed))
+        joint_acc = ((joint_speed - self._last_joint_speed) / dt
+                     if self._last_joint_speed else np.zeros_like(joint_speed))
+        electricity_cost = (self.ELECTRICITY_COST_WEIGHT * float(np.abs(joint_acc * joint_speed).mean()) +
+                            self.STALL_TORQUE_COST_WEIGHT * float(np.square(joint_acc).mean()))
+
+        # calculate standing cost
+        height_cost = -abs(self.robot_body.pose().xyz()[2] - self._target_xyz[2])
 
         self.rewards = [
             progress,
             electricity_cost,
+            height_cost,
         ]
         return sum(self.rewards)
