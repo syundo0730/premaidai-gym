@@ -23,6 +23,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         RoboschoolUrdfEnv.__init__(self, model_urdf=model_path, robot_name='base_link',
                                    action_dim=self.JOINT_DIM, obs_dim=self.OBS_DIM,
                                    fixed_base=False, self_collision=False)
+        self._last_camera_x = 0
         self.rewards = []
         self._last_body_rpy = None
         self._last_body_speed = None
@@ -72,6 +73,13 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         return np.concatenate([joint_angles_and_speeds,
                                [roll, pitch, cos(delta_angle_to_target), sin(delta_angle_to_target)],
                                body_rpy_speed, body_acc, [z - target_z]])
+
+    def camera_adjust(self):
+        # simple follow
+        x, y, z = self.robot_body.pose().xyz()
+        camera_x = 0.98 * self._last_camera_x + (1 - 0.98)*x
+        self.camera.move_and_look_at(camera_x, y - 2.0, 1.4, x, y, 1.0)
+        self._last_camera_x = camera_x
 
     def step(self, action):
         self._apply_action(action)
