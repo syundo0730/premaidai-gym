@@ -11,10 +11,10 @@ from roboschool.scene_stadium import SinglePlayerStadiumScene
 class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
     JOINT_DIM = 25
     # joint position & speed => JOINT_DIM * 2
-    # body roll, pitch, sin(yaw), cos(yaw) => 4
+    # body roll, pitch, delta_angle_to_target => 3
     # rpy speed, acc_x, acc_y, acc_z => 6
     # target body height diff => 1
-    OBS_DIM = JOINT_DIM * 2 + 4 + 6 + 1
+    OBS_DIM = JOINT_DIM * 2 + 3 + 6 + 1
     FOOT_NAME_LIST = ["r_foot", "l_foot"]
 
     def __init__(self):
@@ -71,7 +71,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         self._last_body_rpy = body_rpy
         self._last_body_speed = body_speed
         return np.concatenate([joint_angles_and_speeds,
-                               [roll, pitch, cos(delta_angle_to_target), sin(delta_angle_to_target)],
+                               [roll, pitch, delta_angle_to_target],
                                body_rpy_speed, body_acc, [z - target_z]])
 
     def camera_adjust(self):
