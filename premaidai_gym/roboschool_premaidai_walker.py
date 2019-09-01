@@ -15,6 +15,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
     # rpy speed, acc_x, acc_y, acc_z => 6
     # target body height diff => 1
     OBS_DIM = JOINT_DIM * 2 + 4 + 6 + 1
+    FOOT_NAME_LIST = ["r_foot", "l_foot"]
 
     def __init__(self):
         model_path = os.path.join(
@@ -28,6 +29,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         self._walk_target_distance = 0
         self._walk_target_yaw = 0
         self._target_xyz = (1e3, 0, 0.2)  # kilometer away
+        self._feet_objects = []
 
     def create_single_player_scene(self):
         return SinglePlayerStadiumScene(gravity=9.8, timestep=0.0165 / 8, frame_skip=8)
@@ -41,9 +43,10 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         for i, j in enumerate(self.ordered_joints):
             j.reset_current_position(0, 0)
             limits = j.limits()
+            # should set up low, high at here because orderd_joints are set in reset method
             self.action_space.low[i] = limits[0]
             self.action_space.high[i] = limits[1]
-
+        self._feet_objects = [self.parts[name] for name in self.FOOT_NAME_LIST]
         self.scene.actor_introduce(self)
 
     def calc_state(self):
@@ -98,9 +101,16 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
 
 
 class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
-    PROGRESS_COST_WEIGHT = 50.
-    ELECTRICITY_COST_WEIGHT = -0.01
-    STALL_TORQUE_COST_WEIGHT = -0.0002
+    PROGRESS_COST_WEIGHT = 10.
+    ELECTRICITY_COST_WEIGHT = -2.
+    STALL_TORQUE_COST_WEIGHT = -0.1
+    JOINT_POWER_COEF = 0.01
+    JOINT_AT_LIMIT_COST_WEIGHT = -0.2
+    FOOT_SELF_COLLISION_COST_WEIGHT = -1.
+    FOOT_SELF_COLLISION_EXCEPTION = {
+        'r_foot': {'r_ankle', 'r_lleg'},
+        'l_foot': {'l_ankle', 'l_lleg'},
+    }
 
     def __init__(self):
         super().__init__()
@@ -124,12 +134,33 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
         joint_speed = state[1::2][:self.JOINT_DIM]
         joint_acc = ((joint_speed - self._last_joint_speed) / dt
                      if self._last_joint_speed is not None else np.zeros_like(joint_speed))
+        joint_acc *= self.JOINT_POWER_COEF
         self._last_joint_speed = joint_speed
         electricity_cost = (self.ELECTRICITY_COST_WEIGHT * np.abs(joint_acc * joint_speed).mean() +
                             self.STALL_TORQUE_COST_WEIGHT * np.linalg.norm(joint_acc))
 
+        # joint at limit cost
+        relative_angles = np.array([j.current_relative_position()[0] for j in self.ordered_joints], dtype=np.float32)
+        joints_at_limit_count = np.count_nonzero(np.abs(relative_angles[0::2]) > 0.92)
+        joints_at_limit_cost = self.JOINT_AT_LIMIT_COST_WEIGHT * joints_at_limit_count
+
+        # calculate height cost
+        _, _, z = self.robot_body.pose().xyz()
+        height_cost = 2. if z > 0.15 else -1.
+
+        # calculate feet self collision cost
+        collisions = [(f.name, part.name) for f in self._feet_objects for part in self.cpp_robot.parts
+                      if part.name != f.name
+                      and part.name not in self.FOOT_SELF_COLLISION_EXCEPTION[f.name]
+                      and np.linalg.norm(np.array(f.pose().xyz()) - np.array(part.pose().xyz())) < 0.06]
+        # print(collisions)
+        feet_collision_cost = self.FOOT_SELF_COLLISION_COST_WEIGHT * len(collisions)
+
         self.rewards = [
             progress,
             electricity_cost,
+            joints_at_limit_cost,
+            height_cost,
+            feet_collision_cost,
         ]
         return sum(self.rewards)
