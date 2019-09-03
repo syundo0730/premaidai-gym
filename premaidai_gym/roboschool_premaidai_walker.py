@@ -1,5 +1,5 @@
 import os
-from math import sqrt, atan2, sin, cos
+from math import sqrt, atan2, radians
 
 import numpy as np
 from roboschool.scene_abstract import cpp_household
@@ -16,6 +16,8 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
     # target body height diff => 1
     OBS_DIM = JOINT_DIM * 2 + 3 + 6 + 1
     FOOT_NAME_LIST = ["r_foot", "l_foot"]
+    HOME_POSITION = np.array(
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, radians(60), 0, 0, 0, 0, radians(-60), 0, 0, 0, 0, 0, 0])
 
     def __init__(self):
         model_path = os.path.join(
@@ -36,19 +38,18 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         return SinglePlayerStadiumScene(gravity=9.8, timestep=0.0165 / 8, frame_skip=8)
 
     def robot_specific_reset(self):
-        cpose = cpp_household.Pose()
-        cpose.set_xyz(0, 0, 0.26)
-        cpose.set_rpy(0, 0, 0)
-        self.cpp_robot.set_pose_and_speed(cpose, 0, 0, 0)
-
         for i, j in enumerate(self.ordered_joints):
-            j.reset_current_position(0, 0)
+            j.reset_current_position(self.HOME_POSITION[i], 0)
             limits = j.limits()
             # should set up low, high at here because orderd_joints are set in reset method
             self.action_space.low[i] = limits[0]
             self.action_space.high[i] = limits[1]
         self._feet_objects = [self.parts[name] for name in self.FOOT_NAME_LIST]
         self.scene.actor_introduce(self)
+        cpose = cpp_household.Pose()
+        cpose.set_xyz(0, 0, 0.27)
+        cpose.set_rpy(0, 0, 0)
+        self.cpp_robot.set_pose_and_speed(cpose, 0, 0, 0)
 
     def calc_state(self):
         robot_pose = self.robot_body.pose()
@@ -82,6 +83,9 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         self._last_camera_x = camera_x
 
     def step(self, action):
+        if self.frame < 1:
+            # just apply same action as reset to stabilize simulation on 1st step
+            action = self.HOME_POSITION
         self._apply_action(action)
         self.scene.global_step()
         state = self.calc_state()
@@ -99,7 +103,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
 
     def _apply_action(self, action):
         for n, j in enumerate(self.ordered_joints):
-            j.set_servo_target(float(action[n]), 0.1, 0.1, 40)
+            j.set_servo_target(float(action[n]), 0.045, 0.045, 1.372)
 
     def _is_done(self, state):
         raise NotImplementedError
