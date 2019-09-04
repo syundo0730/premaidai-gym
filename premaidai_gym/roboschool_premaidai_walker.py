@@ -19,6 +19,10 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
     HOME_POSITION = np.array(
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, radians(60), 0, 0, 0, 0, radians(-60), 0, 0, 0, 0, 0, 0])
 
+    # these values are brought from KRS2552HV spec, servo motor that premaidAI is actually using for leg joints
+    JOINT_MAX_TORQUE = 1.372  # 14.0kgf * cm
+    JOINT_MAX_SPEED = radians(428.6)  # 0.14s / 60deg
+
     def __init__(self):
         model_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), 'assets/premaidai.urdf')
@@ -103,7 +107,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
 
     def _apply_action(self, action):
         for n, j in enumerate(self.ordered_joints):
-            j.set_servo_target(float(action[n]), 0.045, 0.045, 1.372)
+            j.set_servo_target(float(action[n]), 0.045, 0.045, self.JOINT_MAX_TORQUE)
 
     def _is_done(self, state):
         raise NotImplementedError
@@ -118,6 +122,7 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
     STALL_TORQUE_COST_WEIGHT = -0.1
     JOINT_POWER_COEF = 0.01
     JOINT_AT_LIMIT_COST_WEIGHT = -0.2
+    JOINT_SPEED_EXCEED_LIMIT_COST_WEIGHT = -0.2
     FOOT_SELF_COLLISION_COST_WEIGHT = -1.
     FOOT_SELF_COLLISION_EXCEPTION = {
         'r_foot': {'r_ankle', 'r_lleg'},
@@ -129,10 +134,12 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
         self._last_potential = None
         self._last_joint_speed = None
 
-    def _is_done(self, state):
+    def _calc_alive_bonus(self):
         _, _, z = self.robot_body.pose().xyz()
-        # prevent fallen down and jumping
-        return z < 0.1 or z > 0.4
+        return 2. if 0.15 < z < 0.5 else -1.
+
+    def _is_done(self, state):
+        return self._calc_alive_bonus() < 0
 
     def _calc_reward(self, state, action):
         # calculate potential cost
@@ -156,9 +163,8 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
         joints_at_limit_count = np.count_nonzero(np.abs(relative_angles[0::2]) > 0.92)
         joints_at_limit_cost = self.JOINT_AT_LIMIT_COST_WEIGHT * joints_at_limit_count
 
-        # calculate height cost
-        _, _, z = self.robot_body.pose().xyz()
-        height_cost = 2. if z > 0.15 else -1.
+        # calculate alive bonus
+        alive_bonus = self._calc_alive_bonus()
 
         # calculate feet self collision cost
         collisions = [(f.name, part.name) for f in self._feet_objects for part in self.cpp_robot.parts
@@ -168,11 +174,16 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
         # print(collisions)
         feet_collision_cost = self.FOOT_SELF_COLLISION_COST_WEIGHT * len(collisions)
 
+        # calculate exceed speed limit cost
+        joint_speed_exceed_limit_count = np.count_nonzero(np.abs(joint_speed) > self.JOINT_MAX_SPEED)
+        joint_speed_limit_cost = self.JOINT_SPEED_EXCEED_LIMIT_COST_WEIGHT * joint_speed_exceed_limit_count
+
         self.rewards = [
             progress,
             electricity_cost,
             joints_at_limit_cost,
-            height_cost,
+            joint_speed_limit_cost,
+            alive_bonus,
             feet_collision_cost,
         ]
         return sum(self.rewards)
