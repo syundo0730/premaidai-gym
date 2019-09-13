@@ -1,5 +1,6 @@
 import os
-from math import sqrt, atan2, radians
+import random
+from math import sqrt, atan2, radians, cos, sin
 
 import numpy as np
 from roboschool.scene_abstract import cpp_household
@@ -11,10 +12,10 @@ from roboschool.scene_stadium import SinglePlayerStadiumScene
 class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
     JOINT_DIM = 25
     # joint position & speed => JOINT_DIM * 2
-    # body roll, pitch, delta_angle_to_target => 3
+    # body roll, pitch, cos(delta_angle_to_target), sin(delta_angle_to_target) => 4
     # rpy speed, acc_x, acc_y, acc_z => 6
     # target body height diff => 1
-    OBS_DIM = JOINT_DIM * 2 + 3 + 6 + 1
+    OBS_DIM = JOINT_DIM * 2 + 4 + 6 + 1
     FOOT_NAME_LIST = ["r_foot", "l_foot"]
     HOME_POSITION = np.array(
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, radians(60), 0, 0, 0, 0, radians(-60), 0, 0, 0, 0, 0, 0])
@@ -35,7 +36,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         self._last_body_speed = None
         self._walk_target_distance = 0
         self._walk_target_yaw = 0
-        self._target_xyz = (1e3, 0, 0.2)  # kilometer away
+        self._target_xyz = (1e3, 0, 0.25)  # kilometer away
         self._feet_objects = []
 
     def create_single_player_scene(self):
@@ -52,21 +53,21 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         self.scene.actor_introduce(self)
         cpose = cpp_household.Pose()
         cpose.set_xyz(0, 0, 0.27)
-        cpose.set_rpy(0, 0, 0)
+        cpose.set_rpy(0, 0, random.uniform(-radians(45), radians(45)))
         self.cpp_robot.set_pose_and_speed(cpose, 0, 0, 0)
 
     def calc_state(self):
         robot_pose = self.robot_body.pose()
         joint_angles_and_speeds = np.array(
-            [j.current_position() for j in self.ordered_joints], dtype=np.float32).flatten()
+            [j.current_relative_position() for j in self.ordered_joints], dtype=np.float32).flatten()
         body_rpy = robot_pose.rpy()
         roll, pitch, yaw = body_rpy
         body_speed = self.robot_body.speed()
         dt = self.scene.dt
-        body_rpy_speed = [(rpy - last_rpy) / dt for rpy, last_rpy in zip(body_rpy, self._last_body_rpy)] \
-            if self._last_body_rpy else [0., 0., 0.]
-        body_acc = [(speed - last_speed) / dt for speed, last_speed in zip(body_speed, self._last_body_speed)] \
-            if self._last_body_speed else [0., 0., 0.]
+        body_rpy_speed = np.array([(rpy - last_rpy) / dt for rpy, last_rpy in zip(body_rpy, self._last_body_rpy)]
+                                  if self._last_body_rpy else [0., 0., 0.])
+        body_acc = np.array([(speed - last_speed) / dt for speed, last_speed in zip(body_speed, self._last_body_speed)]
+                            if self._last_body_speed else [0., 0., 0.])
 
         x, y, z = robot_pose.xyz()
         target_x, target_y, target_z = self._target_xyz
@@ -75,9 +76,13 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         delta_angle_to_target = atan2(diff_y, diff_x) - yaw
         self._last_body_rpy = body_rpy
         self._last_body_speed = body_speed
-        return np.concatenate([joint_angles_and_speeds,
-                               [roll, pitch, delta_angle_to_target],
-                               body_rpy_speed, body_acc, [z - target_z]])
+        return np.clip(np.concatenate(
+            [joint_angles_and_speeds,
+             [roll, pitch, delta_angle_to_target, cos(delta_angle_to_target), sin(delta_angle_to_target)],
+             0.3 * body_rpy_speed,  # 0.3 is just scaling typical speed into -1..+1, no physical sense here
+             0.05 * body_acc,  # 0.05 is just scaling typical speed into -1..+1, no physical sense here
+             [z - target_z]]),
+            -5, 5)
 
     def camera_adjust(self):
         # simple follow
