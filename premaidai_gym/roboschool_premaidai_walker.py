@@ -78,7 +78,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         self._last_body_speed = body_speed
         return np.clip(np.concatenate(
             [joint_angles_and_speeds,
-             [roll, pitch, delta_angle_to_target, cos(delta_angle_to_target), sin(delta_angle_to_target)],
+             [roll, pitch, cos(delta_angle_to_target), sin(delta_angle_to_target)],
              0.3 * body_rpy_speed,  # 0.3 is just scaling typical speed into -1..+1, no physical sense here
              0.05 * body_acc,  # 0.05 is just scaling typical speed into -1..+1, no physical sense here
              [z - target_z]]),
