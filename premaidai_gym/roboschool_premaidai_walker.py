@@ -11,11 +11,6 @@ from roboschool.scene_stadium import SinglePlayerStadiumScene
 
 class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
     JOINT_DIM = 25
-    # joint position & speed => JOINT_DIM * 2
-    # body roll, pitch, cos(delta_angle_to_target), sin(delta_angle_to_target) => 4
-    # rpy speed, acc_x, acc_y, acc_z => 6
-    # target body height diff => 1
-    OBS_DIM = JOINT_DIM * 2 + 4 + 6 + 1
     FOOT_NAME_LIST = ["r_foot", "l_foot"]
     HOME_POSITION = np.array(
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, radians(60), 0, 0, 0, 0, radians(-60), 0, 0, 0, 0, 0, 0])
@@ -24,11 +19,11 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
     JOINT_MAX_TORQUE = 1.372  # 14.0kgf * cm
     JOINT_MAX_SPEED = radians(428.6)  # 0.14s / 60deg
 
-    def __init__(self):
+    def __init__(self, action_dim, obs_dim):
         model_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), 'assets/premaidai.urdf')
         RoboschoolUrdfEnv.__init__(self, model_urdf=model_path, robot_name='base_link',
-                                   action_dim=self.JOINT_DIM, obs_dim=self.OBS_DIM,
+                                   action_dim=action_dim, obs_dim=obs_dim,
                                    fixed_base=False, self_collision=False)
         self._last_camera_x = 0
         self.rewards = []
@@ -123,7 +118,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         raise NotImplementedError
 
 
-class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
+class RoboschoolPremaidAIWalkerEnv(RoboschoolPremaidAIEnv):
     PROGRESS_COST_WEIGHT = 10.
     ELECTRICITY_COST_WEIGHT = -2.
     BODY_RP_SPEED_COST_WEIGHT = -0.3
@@ -137,8 +132,8 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
         'l_foot': {'l_ankle', 'l_lleg'},
     }
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, action_dim, obs_dim):
+        super().__init__(action_dim=action_dim, obs_dim=obs_dim)
         self._last_potential = None
         self._last_joint_speed = None
 
@@ -200,3 +195,28 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
             rp_speed_cost,
         ]
         return sum(self.rewards)
+
+
+class RoboschoolPremaidAIWalker(RoboschoolPremaidAIWalkerEnv):
+    def __init__(self):
+        # joint position & speed => JOINT_DIM * 2
+        # body roll, pitch, cos(delta_angle_to_target), sin(delta_angle_to_target) => 4
+        # rpy speed, acc_x, acc_y, acc_z => 6
+        # target body height diff => 1
+        obs_dim = self.JOINT_DIM * 2 + 4 + 6 + 1
+        super().__init__(action_dim=self.JOINT_DIM, obs_dim=obs_dim)
+
+
+class RoboschoolPremaidAIMimicWalker(RoboschoolPremaidAIWalkerEnv):
+    def __init__(self):
+        # joint position & speed => JOINT_DIM * 2
+        # body roll, pitch, cos(delta_angle_to_target), sin(delta_angle_to_target) => 4
+        # rpy speed, acc_x, acc_y, acc_z => 6
+        # target body height diff => 1
+        # target phase => 1
+        obs_dim = self.JOINT_DIM * 2 + 4 + 6 + 1
+        super().__init__(action_dim=self.JOINT_DIM, obs_dim=obs_dim)
+
+    def calc_state(self):
+        state = self.calc_state()
+        return state
