@@ -38,6 +38,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         self._walk_target_yaw = 0
         self._target_xyz = (1e3, 0, 0.25)  # kilometer away
         self._feet_objects = []
+        self._head = None
 
     def create_single_player_scene(self):
         return SinglePlayerStadiumScene(gravity=9.8, timestep=0.0165 / 8, frame_skip=8)
@@ -55,6 +56,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         cpose.set_xyz(0, 0, 0.27)
         cpose.set_rpy(0, 0, random.uniform(-radians(45), radians(45)))
         self.cpp_robot.set_pose_and_speed(cpose, 0, 0, 0)
+        self._head = self.parts['head']
 
     def calc_state(self):
         robot_pose = self.robot_body.pose()
@@ -140,8 +142,8 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
         self._last_joint_speed = None
 
     def _calc_alive_bonus(self):
-        _, _, z = self.robot_body.pose().xyz()
-        return 2. if 0.15 < z < 0.5 else -1.
+        _, _, head_z = self._head.pose().xyz()
+        return 2. if 0.3 < head_z < 0.6 else -1.
 
     def _is_done(self, state):
         return self._calc_alive_bonus() < 0
