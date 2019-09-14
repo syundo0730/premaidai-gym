@@ -126,6 +126,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
 class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
     PROGRESS_COST_WEIGHT = 10.
     ELECTRICITY_COST_WEIGHT = -2.
+    BODY_RP_SPEED_COST_WEIGHT = -0.3
     STALL_TORQUE_COST_WEIGHT = -0.1
     JOINT_POWER_COEF = 0.01
     JOINT_AT_LIMIT_COST_WEIGHT = -0.2
@@ -185,6 +186,10 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
         joint_speed_exceed_limit_count = np.count_nonzero(np.abs(joint_speed) > self.JOINT_MAX_SPEED)
         joint_speed_limit_cost = self.JOINT_SPEED_EXCEED_LIMIT_COST_WEIGHT * joint_speed_exceed_limit_count
 
+        # calculate body roll, pitch speed
+        roll_speed, pitch_speed = state[54], state[55]
+        rp_speed_cost = self.BODY_RP_SPEED_COST_WEIGHT * (abs(roll_speed) + abs(pitch_speed))
+
         self.rewards = [
             progress,
             electricity_cost,
@@ -192,5 +197,6 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIEnv):
             joint_speed_limit_cost,
             alive_bonus,
             feet_collision_cost,
+            rp_speed_cost,
         ]
         return sum(self.rewards)
