@@ -1,12 +1,14 @@
 import os
 import random
-from math import sqrt, atan2, radians, cos, sin
+from math import sqrt, atan2, radians, cos, sin, exp
 
 import numpy as np
 from roboschool.scene_abstract import cpp_household
 from roboschool.gym_urdf_robot_env import RoboschoolUrdfEnv
 from roboschool.multiplayer import SharedMemoryClientEnv
 from roboschool.scene_stadium import SinglePlayerStadiumScene
+
+from premaidai_gym.simple_walk_controller import SimpleWalkController
 
 
 class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
@@ -208,15 +210,50 @@ class RoboschoolPremaidAIWalker(RoboschoolPremaidAIWalkerEnv):
 
 
 class RoboschoolPremaidAIMimicWalker(RoboschoolPremaidAIWalkerEnv):
+    REF_JOINT_ANGLE_REWARD_WEIGHT = 0.65
+    REF_JOINT_SPEEd_REWARD_WEIGHT = 0.1
+
     def __init__(self):
         # joint position & speed => JOINT_DIM * 2
         # body roll, pitch, cos(delta_angle_to_target), sin(delta_angle_to_target) => 4
         # rpy speed, acc_x, acc_y, acc_z => 6
         # target body height diff => 1
         # target phase => 1
-        obs_dim = self.JOINT_DIM * 2 + 4 + 6 + 1
+        obs_dim = self.JOINT_DIM * 2 + 4 + 6 + 1 + 1
         super().__init__(action_dim=self.JOINT_DIM, obs_dim=obs_dim)
+        self._teacher_walk_controller = None
+        self._ref_joint_angles = None
+        self._ref_joint_angles_absolute = None
+        self._ref_joint_angle_speeds = None
+
+    def robot_specific_reset(self):
+        super().robot_specific_reset()
+        self._teacher_walk_controller = SimpleWalkController(self.scene.dt, 0.91, self.action_space)
 
     def calc_state(self):
-        state = self.calc_state()
-        return state
+        base_state = super().calc_state()
+        ref_joint_angles_absolute, phase = self._teacher_walk_controller.step(self.frame, base_state)
+
+        # convert to relative joint angle
+        ref_joint_angle_speeds = ((ref_joint_angles_absolute - self._ref_joint_angles_absolute) / self.scene.dt
+                                  if self._ref_joint_angles_absolute is not None else np.zeros(self.JOINT_DIM))
+        ref_joint_angles = np.array([np.interp(val, (self.action_space.low[i], self.action_space.high[i]), (-1, 1))
+                                     for i, val in enumerate(ref_joint_angles_absolute)])
+
+        self._ref_joint_angles = ref_joint_angles
+        self._ref_joint_angle_speeds = ref_joint_angle_speeds / self.JOINT_MAX_SPEED
+        self._ref_joint_angles_absolute = ref_joint_angles_absolute
+        return np.concatenate([base_state, [phase]])
+
+    def _calc_reward(self, state, action):
+        super()._calc_reward(state, action)
+
+        # calculate ref joint angle reward
+        joint_angles = state[0::2][:self.JOINT_DIM]
+        joint_speed = state[1::2][:self.JOINT_DIM]
+        angle_reward = self.REF_JOINT_ANGLE_REWARD_WEIGHT * exp(
+            -2 * sum((joint_angles - self._ref_joint_angles)**2))
+        angle_speed_reward = self.REF_JOINT_SPEEd_REWARD_WEIGHT * exp(
+            -0.1 * sum((joint_speed - self._ref_joint_angle_speeds)**2))
+        self.rewards.extend([angle_reward, angle_speed_reward])
+        return sum(self.rewards)
