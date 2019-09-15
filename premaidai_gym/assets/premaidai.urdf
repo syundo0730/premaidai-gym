@@ -127,42 +127,42 @@
   <joint name="r_hpz_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0.004225 -0.0195245 0.001412"/>
     <axis xyz="0 0 1"/>
-    <limit effort="0" lower="-1.41371669412" upper="1.78774075282" velocity="0"/>
+    <limit effort="0" lower="-1.41371669412" upper="1.78774075282" velocity="428.6"/>
     <parent link="base_link"/>
     <child link="r_hip_joint"/>
   </joint>
   <joint name="r_hpx_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0.0021 -0.028"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-0.442440965381" upper="0.396416633005" velocity="0"/>
+    <limit effort="0" lower="-0.442440965381" upper="0.396416633005" velocity="428.6"/>
     <parent link="r_hip_joint"/>
     <child link="r_uleg_root"/>
   </joint>
   <joint name="r_hpy_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 -0.0128525 -0.034358"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.59872159483" upper="1.5745138781" velocity="0"/>
+    <limit effort="0" lower="-1.59872159483" upper="1.5745138781" velocity="428.6"/>
     <parent link="r_uleg_root"/>
     <child link="r_uleg"/>
   </joint>
   <joint name="r_kny_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 -0.0652"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-0.036521014598" upper="2.08811191709" velocity="0"/>
+    <limit effort="0" lower="-0.036521014598" upper="2.08811191709" velocity="428.6"/>
     <parent link="r_uleg"/>
     <child link="r_lleg"/>
   </joint>
   <joint name="r_aky_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 -0.065"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.07089039579" upper="0.424115008235" velocity="0"/>
+    <limit effort="0" lower="-1.07089039579" upper="0.424115008235" velocity="428.6"/>
     <parent link="r_lleg"/>
     <child link="r_ankle"/>
   </joint>
   <joint name="r_akx_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 -0.040677"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-0.667392089347" upper="0.650898727916" velocity="0"/>
+    <limit effort="0" lower="-0.667392089347" upper="0.650898727916" velocity="428.6"/>
     <parent link="r_ankle"/>
     <child link="r_foot"/>
   </joint>
@@ -301,42 +301,42 @@
   <joint name="l_hpz_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0.004225 0.0195245 0.001412"/>
     <axis xyz="0 0 1"/>
-    <limit effort="0" lower="-1.41371669412" upper="1.78774075282" velocity="0"/>
+    <limit effort="0" lower="-1.41371669412" upper="1.78774075282" velocity="428.6"/>
     <parent link="base_link"/>
     <child link="l_hip_joint"/>
   </joint>
   <joint name="l_hpx_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 -0.0021 -0.028"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-0.396416633005" upper="0.442440965381" velocity="0"/>
+    <limit effort="0" lower="-0.396416633005" upper="0.442440965381" velocity="428.6"/>
     <parent link="l_hip_joint"/>
     <child link="l_uleg_root"/>
   </joint>
   <joint name="l_hpy_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0.0128525 -0.034358"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.59872159483" upper="1.5745138781" velocity="0"/>
+    <limit effort="0" lower="-1.59872159483" upper="1.5745138781" velocity="428.6"/>
     <parent link="l_uleg_root"/>
     <child link="l_uleg"/>
   </joint>
   <joint name="l_kny_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 -0.0652"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-0.036521014598" upper="2.08811191709" velocity="0"/>
+    <limit effort="0" lower="-0.036521014598" upper="2.08811191709" velocity="428.6"/>
     <parent link="l_uleg"/>
     <child link="l_lleg"/>
   </joint>
   <joint name="l_aky_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 -0.065"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.07089039579" upper="0.424115008235" velocity="0"/>
+    <limit effort="0" lower="-1.07089039579" upper="0.424115008235" velocity="428.6"/>
     <parent link="l_lleg"/>
     <child link="l_ankle"/>
   </joint>
   <joint name="l_akx_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 -0.040677"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-0.650898727916" upper="0.667392089347" velocity="0"/>
+    <limit effort="0" lower="-0.650898727916" upper="0.667392089347" velocity="428.6"/>
     <parent link="l_ankle"/>
     <child link="l_foot"/>
   </joint>
@@ -456,35 +456,35 @@
   <joint name="r_shy_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 -0.0359 0.113043"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.88495559215" upper="2.23838476568" velocity="0"/>
+    <limit effort="0" lower="-1.88495559215" upper="2.23838476568" velocity="428.6"/>
     <parent link="base_link"/>
     <child link="r_uarm_joint"/>
   </joint>
   <joint name="r_shx_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 -0.0189 0"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-0.0530143760293" upper="1.59808891297" velocity="0"/>
+    <limit effort="0" lower="-0.0530143760293" upper="1.59808891297" velocity="428.6"/>
     <parent link="r_uarm_joint"/>
     <child link="r_uarm"/>
   </joint>
   <joint name="r_ely_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0.0088013 -0.060007 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-2.24604239778" upper="2.34441351774" velocity="0"/>
+    <limit effort="0" lower="-2.24604239778" upper="2.34441351774" velocity="428.6"/>
     <parent link="r_uarm"/>
     <child link="r_larm_joint"/>
   </joint>
   <joint name="r_elx_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 -0.024054 0"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-0.235619449019" upper="2.07639639448" velocity="0"/>
+    <limit effort="0" lower="-0.235619449019" upper="2.07639639448" velocity="428.6"/>
     <parent link="r_larm_joint"/>
     <child link="r_larm"/>
   </joint>
   <joint name="r_wry_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 -0.061348 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-2.35619449019" upper="2.06167017892" velocity="0"/>
+    <limit effort="0" lower="-2.35619449019" upper="2.06167017892" velocity="428.6"/>
     <parent link="r_larm"/>
     <child link="r_hand"/>
   </joint>
@@ -601,35 +601,35 @@
   <joint name="l_shy_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0.0359 0.113043"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-1.88495559215" upper="2.23838476568" velocity="0"/>
+    <limit effort="0" lower="-1.88495559215" upper="2.23838476568" velocity="428.6"/>
     <parent link="base_link"/>
     <child link="l_uarm_joint"/>
   </joint>
   <joint name="l_shx_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0.0189 0"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-1.59808891297" upper="0.0530143760293" velocity="0"/>
+    <limit effort="0" lower="-1.59808891297" upper="0.0530143760293" velocity="428.6"/>
     <parent link="l_uarm_joint"/>
     <child link="l_uarm"/>
   </joint>
   <joint name="l_ely_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0.0088013 0.060007 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-2.24604239778" upper="2.34441351774" velocity="0"/>
+    <limit effort="0" lower="-2.24604239778" upper="2.34441351774" velocity="428.6"/>
     <parent link="l_uarm"/>
     <child link="l_larm_joint"/>
   </joint>
   <joint name="l_elx_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0.024054 0"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-2.07639639448" upper="0.235619449019" velocity="0"/>
+    <limit effort="0" lower="-2.07639639448" upper="0.235619449019" velocity="428.6"/>
     <parent link="l_larm_joint"/>
     <child link="l_larm"/>
   </joint>
   <joint name="l_wry_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0.061348 0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-2.35619449019" upper="2.06167017892" velocity="0"/>
+    <limit effort="0" lower="-2.35619449019" upper="2.06167017892" velocity="428.6"/>
     <parent link="l_larm"/>
     <child link="l_hand"/>
   </joint>
@@ -724,21 +724,21 @@
   <joint name="head_ny_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0.0038738 0 0.132809"/>
     <axis xyz="0 1 0"/>
-    <limit effort="0" lower="-0.176714586764" upper="0.412334035784" velocity="0"/>
+    <limit effort="0" lower="-0.176714586764" upper="0.412334035784" velocity="428.6"/>
     <parent link="body"/>
     <child link="neck_pitch"/>
   </joint>
   <joint name="head_nz_joint" type="revolute">
     <origin rpy="0 0 0" xyz="-0.0103485 0 0.011103"/>
     <axis xyz="0 0 1"/>
-    <limit effort="0" lower="-0.824668071567" upper="0.824668071567" velocity="0"/>
+    <limit effort="0" lower="-0.824668071567" upper="0.824668071567" velocity="428.6"/>
     <parent link="neck_pitch"/>
     <child link="head_yaw"/>
   </joint>
   <joint name="head_nx_joint" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 0.0129"/>
     <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-0.382881604656" upper="0.500691329166" velocity="0"/>
+    <limit effort="0" lower="-0.382881604656" upper="0.500691329166" velocity="428.6"/>
     <parent link="head_yaw"/>
     <child link="head"/>
   </joint>
