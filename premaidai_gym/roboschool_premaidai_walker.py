@@ -57,7 +57,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
 
     def calc_state(self):
         robot_pose = self.robot_body.pose()
-        joint_angles_and_speeds = np.array(
+        relative_joint_angles_and_speeds = np.array(
             [j.current_relative_position() for j in self.ordered_joints], dtype=np.float32).flatten()
         body_rpy = robot_pose.rpy()
         roll, pitch, yaw = body_rpy
@@ -76,7 +76,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         self._last_body_rpy = body_rpy
         self._last_body_speed = body_speed
         return np.clip(np.concatenate(
-            [joint_angles_and_speeds,
+            [relative_joint_angles_and_speeds,
              [roll, pitch, cos(delta_angle_to_target), sin(delta_angle_to_target)],
              0.3 * body_rpy_speed,  # 0.3 is just scaling typical speed into -1..+1, no physical sense here
              0.05 * body_acc,  # 0.05 is just scaling typical speed into -1..+1, no physical sense here
@@ -112,6 +112,14 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
     def _apply_action(self, action):
         for n, j in enumerate(self.ordered_joints):
             j.set_servo_target(float(action[n]), 0.045, 0.045, self.JOINT_MAX_TORQUE)
+
+    @property
+    def _joint_angles(self):
+        return np.array([j.current_position()[0] for j in self.ordered_joints], dtype=np.float32)
+
+    @property
+    def _joint_angle_speeds(self):
+        return np.array([j.current_position()[1] for j in self.ordered_joints], dtype=np.float32)
 
     def _is_done(self, state):
         raise NotImplementedError
@@ -155,7 +163,7 @@ class RoboschoolPremaidAIWalkerEnv(RoboschoolPremaidAIEnv):
         self._last_potential = potential
 
         # calculate joint cost
-        joint_speed = state[1::2][:self.JOINT_DIM]
+        joint_speed = self._joint_angle_speeds
         joint_acc = ((joint_speed - self._last_joint_speed) / dt
                      if self._last_joint_speed is not None else np.zeros_like(joint_speed))
         joint_acc *= self.JOINT_POWER_COEF
@@ -223,7 +231,6 @@ class RoboschoolPremaidAIMimicWalker(RoboschoolPremaidAIWalkerEnv):
         super().__init__(action_dim=self.JOINT_DIM, obs_dim=obs_dim)
         self._teacher_walk_controller = None
         self._ref_joint_angles = None
-        self._ref_joint_angles_absolute = None
         self._ref_joint_angle_speeds = None
 
     def robot_specific_reset(self):
@@ -232,25 +239,22 @@ class RoboschoolPremaidAIMimicWalker(RoboschoolPremaidAIWalkerEnv):
 
     def calc_state(self):
         base_state = super().calc_state()
-        ref_joint_angles_absolute, phase = self._teacher_walk_controller.step(self.frame, base_state)
+        ref_joint_angles, phase = self._teacher_walk_controller.step(self.frame, base_state)
 
         # convert to relative joint angle
-        ref_joint_angle_speeds = ((ref_joint_angles_absolute - self._ref_joint_angles_absolute) / self.scene.dt
-                                  if self._ref_joint_angles_absolute is not None else np.zeros(self.JOINT_DIM))
-        ref_joint_angles = np.array([np.interp(val, (self.action_space.low[i], self.action_space.high[i]), (-1, 1))
-                                     for i, val in enumerate(ref_joint_angles_absolute)])
+        ref_joint_angle_speeds = ((ref_joint_angles - self._ref_joint_angles) / self.scene.dt
+                                  if self._ref_joint_angles is not None else np.zeros(self.JOINT_DIM))
 
         self._ref_joint_angles = ref_joint_angles
-        self._ref_joint_angle_speeds = ref_joint_angle_speeds / self.JOINT_MAX_SPEED
-        self._ref_joint_angles_absolute = ref_joint_angles_absolute
+        self._ref_joint_angle_speeds = ref_joint_angle_speeds
         return np.concatenate([base_state, [phase]])
 
     def _calc_reward(self, state, action):
         super()._calc_reward(state, action)
 
         # calculate ref joint angle reward
-        joint_angles = state[0::2][:self.JOINT_DIM]
-        joint_speed = state[1::2][:self.JOINT_DIM]
+        joint_angles = self._joint_angles
+        joint_speed = self._joint_angle_speeds
         angle_reward = self.REF_JOINT_ANGLE_REWARD_WEIGHT * exp(
             -2 * sum((joint_angles - self._ref_joint_angles)**2))
         angle_speed_reward = self.REF_JOINT_SPEEd_REWARD_WEIGHT * exp(
