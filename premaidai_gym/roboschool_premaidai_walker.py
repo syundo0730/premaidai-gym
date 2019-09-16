@@ -225,12 +225,10 @@ class RoboschoolPremaidAIMimicWalker(RoboschoolPremaidAIWalkerEnv):
         self._ref_joint_angles = None
         self._ref_joint_angles_absolute = None
         self._ref_joint_angle_speeds = None
-        self._terminated = False
 
     def robot_specific_reset(self):
         super().robot_specific_reset()
         self._teacher_walk_controller = SimpleWalkController(self.scene.dt, 0.91, self.action_space)
-        self._terminated = False
 
     def calc_state(self):
         base_state = super().calc_state()
@@ -248,11 +246,6 @@ class RoboschoolPremaidAIMimicWalker(RoboschoolPremaidAIWalkerEnv):
         return np.concatenate([base_state, [phase]])
 
     def _calc_reward(self, state, action):
-        if super()._is_done(state) or self._terminated:
-            self._terminated = True
-            # set reward to zero for early termination
-            self.rewards = [0] * 9
-            return 0
         super()._calc_reward(state, action)
 
         # calculate ref joint angle reward
@@ -264,7 +257,3 @@ class RoboschoolPremaidAIMimicWalker(RoboschoolPremaidAIWalkerEnv):
             -0.1 * sum((joint_speed - self._ref_joint_angle_speeds)**2))
         self.rewards.extend([angle_reward, angle_speed_reward])
         return sum(self.rewards)
-
-    def _is_done(self, state):
-        # don't exit episode on early termination
-        return False

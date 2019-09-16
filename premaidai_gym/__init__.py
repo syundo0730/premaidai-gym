@@ -11,7 +11,7 @@ register(
 register(
     id='RoboschoolPremaidAIMimicWalker-v0',
     entry_point='premaidai_gym:RoboschoolPremaidAIMimicWalker',
-    max_episode_steps=3640,  # about 1min
+    max_episode_steps=9999,
     reward_threshold=3500.0,
     tags={"pg_complexity": 100*1000000},
 )
