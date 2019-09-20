@@ -32,7 +32,7 @@ class _WalkPhaseGenerator:
 
 
 class SimpleWalkController:
-    def __init__(self, dt, period, action_space):
+    def __init__(self, dt, period, action_space, feedback_control=True):
         self._home_pose = np.full(action_space.shape[0], 0.)
         self._home_pose[13] = radians(60)  # right arm
         self._home_pose[18] = radians(-60)  # left arm
@@ -42,7 +42,9 @@ class SimpleWalkController:
         self._bend_phase_generator = _WalkPhaseGenerator(
             period, each_stop_period=0.1)
         self._dt = dt
+        self._feedback_control = feedback_control
         self._walk_started_at = None
+        self._last_angles = None
 
     def step(self, frame, obs):
         elapsed = frame * self._dt
@@ -78,31 +80,36 @@ class SimpleWalkController:
         r_theta_sh_p = -2 * stride_wave
         l_theta_sh_p = 2 * stride_wave
 
-        # walking direction control
-        cos_yaw, sin_yaw = obs[52], obs[53]
-        theta_hip_yaw = 0.3 * bend_wave * atan2(sin_yaw, cos_yaw)
+        theta_hip_yaw = 0
+        if self._feedback_control:
+            # walking direction control
+            cos_yaw, sin_yaw = obs[52], obs[53]
+            theta_hip_yaw = 0.3 * bend_wave * atan2(sin_yaw, cos_yaw)
 
-        # roll stabilization
-        roll_speed = obs[54]
-        theta_ankle_r += 0.3 * roll_speed
+            # roll stabilization
+            roll_speed = obs[54]
+            theta_ankle_r += 0.3 * roll_speed
 
-        action = np.zeros_like(self._home_pose)
-        action[0] = theta_hip_yaw
-        action[1] = theta_hip_r
-        action[2] = r_theta_hip_p
-        action[3] = r_theta_knee_p
-        action[4] = r_theta_ankle_p
-        action[5] = theta_ankle_r
+        angles = np.zeros_like(self._home_pose)
+        angles[0] = theta_hip_yaw
+        angles[1] = theta_hip_r
+        angles[2] = r_theta_hip_p
+        angles[3] = r_theta_knee_p
+        angles[4] = r_theta_ankle_p
+        angles[5] = theta_ankle_r
 
-        action[6] = -theta_hip_yaw
-        action[7] = theta_hip_r
-        action[8] = l_theta_hip_p
-        action[9] = l_theta_knee_p
-        action[10] = l_theta_ankle_p
-        action[11] = theta_ankle_r
+        angles[6] = -theta_hip_yaw
+        angles[7] = theta_hip_r
+        angles[8] = l_theta_hip_p
+        angles[9] = l_theta_knee_p
+        angles[10] = l_theta_ankle_p
+        angles[11] = theta_ankle_r
 
-        action[12] = r_theta_sh_p
-        action[17] = l_theta_sh_p
+        angles[12] = r_theta_sh_p
+        angles[17] = l_theta_sh_p
 
-        action += self._home_pose
-        return action, phase
+        angles += self._home_pose
+        speeds = ((angles - self._last_angles) / self._dt
+                  if self._last_angles is not None else np.zeros_like(self._home_pose))
+        self._last_angles = angles
+        return angles, speeds, phase

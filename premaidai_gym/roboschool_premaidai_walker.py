@@ -239,12 +239,7 @@ class RoboschoolPremaidAIMimicWalker(RoboschoolPremaidAIWalkerEnv):
 
     def calc_state(self):
         base_state = super().calc_state()
-        ref_joint_angles, phase = self._teacher_walk_controller.step(self.frame, base_state)
-
-        # convert to relative joint angle
-        ref_joint_angle_speeds = ((ref_joint_angles - self._ref_joint_angles) / self.scene.dt
-                                  if self._ref_joint_angles is not None else np.zeros(self.JOINT_DIM))
-
+        ref_joint_angles, ref_joint_angle_speeds, phase = self._teacher_walk_controller.step(self.frame, base_state)
         self._ref_joint_angles = ref_joint_angles
         self._ref_joint_angle_speeds = ref_joint_angle_speeds
         return np.concatenate([base_state, [phase]])
@@ -261,3 +256,71 @@ class RoboschoolPremaidAIMimicWalker(RoboschoolPremaidAIWalkerEnv):
             -0.1 * sum((joint_speed - self._ref_joint_angle_speeds)**2))
         self.rewards.extend([angle_reward, angle_speed_reward])
         return sum(self.rewards)
+
+
+class RoboschoolPremaidAIStabilizationWalker(RoboschoolPremaidAIWalkerEnv):
+    JOINT_DIFF_RANGE = (-radians(10), radians(10))
+    REF_JOINT_ANGLE_REWARD_WEIGHT = 0.5
+    REF_BODY_POSITION_REWARD_WEIGHT = 0.3
+    REF_BODY_POSTURE_REWARD_WEIGHT = 0.2
+
+    def __init__(self):
+        # joint position & speed => JOINT_DIM * 2
+        # reference joint position & speed => JOINT_DIM * 2
+        # body roll, pitch, cos(delta_angle_to_target), sin(delta_angle_to_target) => 4
+        # rpy speed, acc_x, acc_y, acc_z => 6
+        # target body height diff => 1
+        obs_dim = self.JOINT_DIM * 2 * 2 + 4 + 6 + 1
+        super().__init__(action_dim=self.JOINT_DIM, obs_dim=obs_dim)
+        self._reference_walk_controller = None
+        self._ref_joint_angles = None
+        self._ref_joint_angle_speeds = None
+        self._ref_body_xyz = None
+
+    def robot_specific_reset(self):
+        super().robot_specific_reset()
+        for i, _ in enumerate(self.ordered_joints):
+            self.action_space.low[i] = self.JOINT_DIFF_RANGE[0]
+            self.action_space.high[i] = self.JOINT_DIFF_RANGE[1]
+        self._reference_walk_controller = SimpleWalkController(self.scene.dt, 0.91, self.action_space,
+                                                               feedback_control=False)
+
+    def calc_state(self):
+        ref_joint_angles, ref_joint_angle_speeds, phase = self._reference_walk_controller.step(self.frame, None)
+
+        # convert to relative joint angle
+        relative_angles = np.array([np.interp(val, (self.action_space.low[i], self.action_space.high[i]), (-1, 1))
+                                    for i, val in enumerate(ref_joint_angles)])
+        relative_speeds = ref_joint_angle_speeds / self.JOINT_MAX_SPEED
+        joint_positions = np.array([[p, v] for p, v in zip(relative_angles, relative_speeds)]).flatten()
+
+        self._ref_joint_angles = ref_joint_angles
+        self._ref_joint_angle_speeds = ref_joint_angle_speeds
+        elapsed = self.frame * self.scene.dt
+        self._ref_body_xyz = np.array([0.1 * elapsed, self._target_xyz[1], self._target_xyz[2]])
+        base_state = super().calc_state()
+        sp = self.JOINT_DIM * 2
+        return np.concatenate([base_state[:sp], joint_positions, base_state[sp:]])
+
+    def _calc_reward(self, state, action):
+        # calculate ref joint angle reward
+        joint_angles = self._joint_angles
+        angle_reward = self.REF_JOINT_ANGLE_REWARD_WEIGHT * exp(
+            -3 * sum((joint_angles - self._ref_joint_angles)**2))
+        robot_pose = self.robot_body.pose()
+        body_xyz = np.array([*robot_pose.xyz()])
+        body_position_reward = self.REF_BODY_POSITION_REWARD_WEIGHT * exp(
+            -3 * sum((body_xyz - self._ref_body_xyz)**2))
+        body_rpy = np.array([*robot_pose.rpy()])
+        body_posture_reward = self.REF_BODY_POSTURE_REWARD_WEIGHT * exp(-0.5 * sum(body_rpy**2))
+        self.rewards = [
+            angle_reward,
+            body_position_reward,
+            body_posture_reward
+        ]
+        return sum(self.rewards)
+
+    def _apply_action(self, action):
+        target_angles = self._ref_joint_angles + action
+        for n, j in enumerate(self.ordered_joints):
+            j.set_servo_target(float(target_angles[n]), 0.045, 0.045, self.JOINT_MAX_TORQUE)
