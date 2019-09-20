@@ -37,16 +37,20 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         self._feet_objects = []
         self._head = None
 
+        scene = self.create_single_player_scene()
+        pose = cpp_household.Pose()
+        urdf = scene.cpp_world.load_urdf(model_path, pose, self.fixed_base, self.self_collision)
+        for i, j in enumerate(urdf.joints):
+            limits = j.limits()
+            self.action_space.low[i] = limits[0]
+            self.action_space.high[i] = limits[1]
+
     def create_single_player_scene(self):
         return SinglePlayerStadiumScene(gravity=9.8, timestep=0.0165 / 8, frame_skip=8)
 
     def robot_specific_reset(self):
         for i, j in enumerate(self.ordered_joints):
             j.reset_current_position(self.HOME_POSITION[i], 0)
-            limits = j.limits()
-            # should set up low, high at here because orderd_joints are set in reset method
-            self.action_space.low[i] = limits[0]
-            self.action_space.high[i] = limits[1]
         self._feet_objects = [self.parts[name] for name in self.FOOT_NAME_LIST]
         self.scene.actor_introduce(self)
         cpose = cpp_household.Pose()
@@ -276,12 +280,12 @@ class RoboschoolPremaidAIStabilizationWalker(RoboschoolPremaidAIWalkerEnv):
         self._ref_joint_angles = None
         self._ref_joint_angle_speeds = None
         self._ref_body_xyz = None
+        for i in range(self.JOINT_DIM):
+            self.action_space.low[i] = self.JOINT_DIFF_RANGE[0]
+            self.action_space.high[i] = self.JOINT_DIFF_RANGE[1]
 
     def robot_specific_reset(self):
         super().robot_specific_reset()
-        for i, _ in enumerate(self.ordered_joints):
-            self.action_space.low[i] = self.JOINT_DIFF_RANGE[0]
-            self.action_space.high[i] = self.JOINT_DIFF_RANGE[1]
         self._reference_walk_controller = SimpleWalkController(self.scene.dt, 0.91, self.action_space,
                                                                feedback_control=False)
 
