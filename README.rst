@@ -1,23 +1,20 @@
-premaidai-gym
+premaidai-gym: プリメイドAIのRoboschool gym env
 
+---------------
+インストール
+---------------
 
-# Installation
-install poetry
+code-block:: bash
 
-# Develop
+    $ pip install premaidai_gym
 
-```
-git clone ...
-cd premaidai-gym
-poetry develop
-```
+---------------
+使い方
+---------------
 
-# Usage
-```
-import gym
-import premaidai_gym
+code-block:: python
 
-env = gym.make('RoboschoolPremaidAIWalker-v0')
-```
+    import gym
+    import premaidai_gym
 
-then, OpenAI-Gym env is built
+    env = gym.make('RoboschoolPremaidAIWalker-v0')

@@ -1,8 +1,11 @@
 [tool.poetry]
 name = "premaidai-gym"
-version = "0.4.1"
-description = ""
+version = "1.0.0"
+description = "Roboshcool env for Premaid AI"
 authors = ["Shundo Kishi <syundo0730@gmail.com>"]
+readme = "README.rst"
+repository = "https://github.com/syundo0730/premaidai-gym"
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
