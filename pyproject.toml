@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "premaidai-gym"
-version = "1.0.0"
+version = "1.1.0"
 description = "Roboshcool env for Premaid AI"
 authors = ["Shundo Kishi <syundo0730@gmail.com>"]
 readme = "README.rst"

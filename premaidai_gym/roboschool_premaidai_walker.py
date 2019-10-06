@@ -40,10 +40,9 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
         scene = self.create_single_player_scene()
         pose = cpp_household.Pose()
         urdf = scene.cpp_world.load_urdf(model_path, pose, self.fixed_base, self.self_collision)
-        for i, j in enumerate(urdf.joints):
-            limits = j.limits()
-            self.action_space.low[i] = limits[0]
-            self.action_space.high[i] = limits[1]
+        self._angle_range = [[*j.limits()[:2]] for j in urdf.joints]
+        self._angle_range_low = [a_range[0] for a_range in self._angle_range]
+        self._angle_range_high = [a_range[1] for a_range in self._angle_range]
 
     def create_single_player_scene(self):
         return SinglePlayerStadiumScene(gravity=9.8, timestep=0.0165 / 8, frame_skip=8)
@@ -97,7 +96,7 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
     def step(self, action):
         if self.frame < 1:
             # just apply same action as reset to stabilize simulation on 1st step
-            action = self.HOME_POSITION
+            action = self._absolute_to_relative(self.HOME_POSITION)
         self._apply_action(action)
         self.scene.global_step()
         state = self.calc_state()
@@ -113,9 +112,16 @@ class RoboschoolPremaidAIEnv(SharedMemoryClientEnv, RoboschoolUrdfEnv):
 
         return state, reward, done, {}
 
+    def _relative_to_absolute(self, angles):
+        return np.array([np.interp(angle, [-1, 1], a_range) for angle, a_range in zip(angles, self._angle_range)])
+
+    def _absolute_to_relative(self, angles):
+        return np.array([np.interp(angle, a_range, [-1, 1]) for angle, a_range in zip(angles, self._angle_range)])
+
     def _apply_action(self, action):
-        for n, j in enumerate(self.ordered_joints):
-            j.set_servo_target(float(action[n]), 0.045, 0.045, self.JOINT_MAX_TORQUE)
+        absolute_angles = self._relative_to_absolute(action)
+        for i, j in enumerate(self.ordered_joints):
+            j.set_servo_target(absolute_angles[i], 0.045, 0.045, self.JOINT_MAX_TORQUE)
 
     @property
     def _joint_angles(self):
@@ -280,9 +286,8 @@ class RoboschoolPremaidAIStabilizationWalker(RoboschoolPremaidAIWalkerEnv):
         self._ref_joint_angles = None
         self._ref_joint_angle_speeds = None
         self._ref_body_xyz = None
-        for i in range(self.JOINT_DIM):
-            self.action_space.low[i] = self.JOINT_DIFF_RANGE[0]
-            self.action_space.high[i] = self.JOINT_DIFF_RANGE[1]
+        self.action_space.low = self._absolute_to_relative(np.full(self.JOINT_DIM, self.JOINT_DIFF_RANGE[0]))
+        self.action_space.high = self._absolute_to_relative(np.full(self.JOINT_DIM, self.JOINT_DIFF_RANGE[1]))
 
     def robot_specific_reset(self):
         super().robot_specific_reset()
@@ -325,6 +330,7 @@ class RoboschoolPremaidAIStabilizationWalker(RoboschoolPremaidAIWalkerEnv):
         return sum(self.rewards)
 
     def _apply_action(self, action):
-        target_angles = self._ref_joint_angles + action
+        target_angles = np.clip(self._ref_joint_angles + np.interp(action, [-1, 1], self.JOINT_DIFF_RANGE),
+                                self._angle_range_low, self._angle_range_high)
         for n, j in enumerate(self.ordered_joints):
             j.set_servo_target(float(target_angles[n]), 0.045, 0.045, self.JOINT_MAX_TORQUE)
